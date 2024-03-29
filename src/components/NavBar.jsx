@@ -30,7 +30,7 @@ height : 15vh;
 position : sticky;
 top : 0;
 transistion : 0.3s ease-in-out;
-background-color : ${({navBackground})=>navBackground ? "rgba(0,0,0,0.7)":"none"};
+background-color : ${({navBackground})=>navBackground ? "rgba(5,5,5,0.8)":"none"};
 .search_bar{
     background-color : white;
     width : 30%;

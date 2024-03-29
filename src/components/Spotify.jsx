@@ -15,6 +15,7 @@ export default function Spotify() {
     const [headerBackground,setHeaderBackground] = useState(false)
     const bodyScrolled = ()=>{
         bodyRef.current.scrollTop >=30 ? setNavBackground(true) :setNavBackground(false)
+        
         bodyRef.current.scrollTop >=268 ? setHeaderBackground(true) :setHeaderBackground(false)
     }
     useEffect(()=>{
@@ -40,7 +41,7 @@ export default function Spotify() {
         <div className="spotify_body">
             <SideBar/>
             <div className="body"ref={bodyRef} onScroll={bodyScrolled}>
-                <NavBar nacBackground={navBackground}/>
+                <NavBar navBackground={navBackground}/>
                 <div className="body_contents">
                     <Body headerBackground={headerBackground}/>
                 </div>
@@ -58,7 +59,7 @@ const Container = styled.div`
     max-height : 100vh;
     overflow : hidden;
     display : grid;
-    grid-template-rows : 90vh 10vh;
+    grid-template-rows : 85vh 15vh;
     .spotify_body{
         display : grid;
         grid-template-columns : 15vw 85vw;
