@@ -42,7 +42,7 @@ export default function PlayerControls() {
                     id : data.item.id,
                     name : data.item.name,
                     artists : data.item.artists.map((artist)=>artist.name),
-                    image : data.item.album.images[2].url,
+                    image : data.item?.album.images[2].url,
     
                 }
                 dispatch({type : reducerCases.SET_PLAYING,currentPlaying })

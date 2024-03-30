@@ -8,10 +8,10 @@ export default function Login() {
     const scope = [
       "user-read-private",
       "user-read-email",
-      "user-modify-playback-state",
       "user-read-playback-state",
       "user-read-currently-playing",
       "user-read-recently-played",
+      "user-modify-playback-state",
       "user-top-read",
     ]
     window.location.href = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(

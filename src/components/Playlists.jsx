@@ -22,11 +22,15 @@ export default function Playlists() {
         }
         getPlaylists()
     },[token,dispatch])
+
+    const changeSelecteddPlaylist = (selectedPlaylistId)=>{
+      dispatch({type : reducerCases.SET_PLAYLIST_ID , selectedPlaylistId})
+    }
   return (
     <Container>
         <ul>
-            {playlists.map(({name,id})=>{
-                return <li key={id}>{name}</li>
+            {playlists && playlists.map(({name,id})=>{
+                return <li key={id} onClick={()=>changeSelecteddPlaylist(id)}>{name}</li>
             })}
         </ul>
     </Container>

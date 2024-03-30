@@ -14,31 +14,31 @@ export default function CurrentTrack() {
                     "Content-Type" : "application/json"
                 }
             })
-            console.log(data);
+            // console.log(data);
             const currentPlaying = {
-                id : data.item.id,
-                name : data.item.name,
-                artists : data.item.artists.map((artist)=>artist.name),
-                image : data.item.album.images[2].url,
+                id : data.item?.id,
+                name : data.item?.name,
+                artists : data.item?.artists.map((artist)=>artist.name),
+                image : data.item.album?.images[2].url,
 
             }
-            console.log(currentPlaying);
+            // console.log(currentPlaying);
             dispatch({type : reducerCases.SET_PLAYING,currentPlaying })
         }
         getCurrentTrack()
 
-    },[token,dispatch])
+    },[token,dispatch,currentPlaying])
   return (
     <Container>
     {currentPlaying && (
       <div className="track">
         <div className="track__image">
-          <img src={currentPlaying.image} alt="currentPlaying" />
+          <img src={currentPlaying?.image} alt="currentPlaying" />
         </div>
         <div className="track__info">
-          <h4 className="track__info__track__name">{currentPlaying.name}</h4>
+          <h4 className="track__info__track__name">{currentPlaying?.name}</h4>
           <h6 className="track__info__track__artists">
-            {currentPlaying.artists.join(", ")}
+            {currentPlaying?.artists.join(", ")}
           </h6>
         </div>
       </div>

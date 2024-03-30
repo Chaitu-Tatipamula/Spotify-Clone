@@ -4,6 +4,7 @@ import {AiFillClockCircle} from 'react-icons/ai'
 import { useStateProvider } from '../utils/StateProvider'
 import axios from 'axios'
 import { reducerCases } from '../utils/constants'
+import { reducer } from '../utils/reducer'
 export default function Body({headerBackground}) {
     const [{token,selectedPlaylistId,selectedPlaylist},dispatch] = useStateProvider()
     useEffect(()=>{
@@ -19,24 +20,61 @@ export default function Body({headerBackground}) {
             name : data.name,
             description : data.description,
             image : data.images[0].url,
-            tracks : data.tracks.items.map(({track})=>({
-                
+            tracks : data.tracks?.items.map(({track})=>({
                     id : track.id,
                     name : track.name,
                     artists :track.artists.map((artist)=> artist.name),
-                    image: track.album.images[2].url,
+                    image: track.album.images[2]?.url,
                     duration : track.duration_ms,
                     album : track.album.name,
                     context_uri : track.album.uri,
                     track_number : track.track_number
-
-                
             }))
         }
         dispatch({type : reducerCases.SET_PLAYLIST,selectedPlaylist})
     }
     getInitialPlaylist();
     },[token,dispatch,selectedPlaylistId])
+
+    const playTrack = async(
+        id,
+        name,
+        context_uri,
+        image,
+        track_number,
+        artists
+    )=>{
+        const response = await axios.put("https://api.spotify.com/v1/me/player/play",
+            {
+                "context_uri": context_uri,
+                "offset": {
+                    "position": track_number-1
+                },
+                "position_ms": 0
+            },
+        {
+                headers : {
+                    Authorization : "Bearer " + token,
+                    "Content-Type" : "application/json"
+                }
+            })
+
+                if(response.status==204){
+                    const currentPlaying = {
+                        id,
+                        name,
+                        artists,
+                        image
+                    }
+                    dispatch({type : reducerCases.SET_PLAYING,currentPlaying})
+                    dispatch({type: reducerCases.SET_PLAYER_STATE, playerState : true})
+                }
+                else {
+                    dispatch({type : reducerCases.SET_PLAYER_STATE , playerState : true})
+                }
+
+
+    }
   return (
     <Container headerBackground={headerBackground}>
         {
@@ -44,11 +82,11 @@ export default function Body({headerBackground}) {
             <>
                 <div className="playlist">
                     <div className="image">
-                        <img src={selectedPlaylist.image} alt="" />
+                        <img src={selectedPlaylist?.image} alt="" />
                     </div>
                     <div className="details">
                         <span className='type'>PLAYLIST</span>
-                        <h1 className='title'>{selectedPlaylist.name}</h1>
+                        <h1 className='title'>{selectedPlaylist?.name}</h1>
                         <p className='description'>{selectedPlaylist?.description}</p>
                     </div>
                 </div>
@@ -71,11 +109,11 @@ export default function Body({headerBackground}) {
                     
                     <div className="tracks">
                         {
-                            selectedPlaylist.tracks.map(({
+                            selectedPlaylist?.tracks.map(({
                                 id,name,artists,image,duration,album,context_uri,track_number
                             },index)=>{
                                 return (
-                                    <div className="row">
+                                    <div className="row" onClick={playTrack}>
                                         <div className="col">
                                             <span>{index+1}</span>
                                         </div>
@@ -138,14 +176,20 @@ const Container = styled.div`
         align-items : center;
         margin : 1rem 0 0 0;
         border-bottom : 0.3px solid  gray;
-        color : #dddcdc;
+        color : rgb(200,200,200);
         position : sticky;
         top : 15vh;
         padding : 1rem 3rem;
         transition : 0.3s ease-in-out;
         background-color : ${({headerBackground})=>headerBackground ? "rgba(0,0,0,150.75)":"none"};
         text-align : left;
-        
+        span{
+            cursor : pointer;
+            &:hover{
+                color : white;
+                transition : 0.3s ease-in-out;  
+            }
+        }
     }
     .tracks{
         margin : 0.5rem 0 0 0 ;
